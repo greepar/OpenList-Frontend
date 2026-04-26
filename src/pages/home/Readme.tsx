@@ -10,8 +10,20 @@ export function Readme(props: {
   fromMeta: keyof typeof objStore
 }) {
   const cardBg = useColorModeValue("white", "$neutral3")
+  const shareCardBg = useColorModeValue(
+    "rgba(255, 255, 255, 0.34)",
+    "rgba(17, 20, 28, 0.42)",
+  )
+  const shareBorder = useColorModeValue(
+    "1px solid rgba(255, 255, 255, 0.42)",
+    "1px solid rgba(255, 255, 255, 0.08)",
+  )
+  const shareShadow = useColorModeValue(
+    "0 12px 30px rgba(124, 128, 148, 0.18)",
+    "0 14px 36px rgba(0, 0, 0, 0.26)",
+  )
   const { proxyLink } = useLink()
-  const { pathname } = useRouter()
+  const { isShare } = useRouter()
   const readme = createMemo(
     on(
       () => objStore.state,
@@ -55,7 +67,24 @@ export function Readme(props: {
   const [content] = createResource(readme, fetchContent)
   return (
     <Show when={getSettingBool("readme_autorender") && readme()}>
-      <Box w="$full" rounded="$xl" p="$4" bgColor={cardBg()} shadow="$lg">
+      <Box
+        classList={{ "share-glass": isShare() }}
+        w="$full"
+        rounded="$xl"
+        p="$4"
+        bgColor={isShare() ? shareCardBg() : cardBg()}
+        border={isShare() ? shareBorder() : undefined}
+        shadow={isShare() ? undefined : "$lg"}
+        style={{
+          "box-shadow": isShare() ? shareShadow() : undefined,
+          "-webkit-backdrop-filter": isShare()
+            ? "blur(18px) saturate(140%)"
+            : undefined,
+          "backdrop-filter": isShare()
+            ? "blur(18px) saturate(140%)"
+            : undefined,
+        }}
+      >
         <MaybeLoading loading={content.loading}>
           <Markdown
             children={content()?.content}

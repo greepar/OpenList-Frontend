@@ -32,6 +32,7 @@
     "serve": "vite preview",
     "prepare": "husky",
     "lint": "tsc -p tsconfig.json --noEmit",
+    "lint-staged": "lint-staged",
     "format": "prettier --ignore-path .gitignore -w \"src/**/*.{js,ts,json,css,tsx,jsx}\""
   },
   "license": "MIT",

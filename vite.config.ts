@@ -32,6 +32,40 @@ function fixLegacyPolyfillDataSrc(): Plugin {
   }
 }
 
+function fixDynamicBaseRuntimePaths(): Plugin {
+  const rewrite = (code: string) =>
+    code
+      .replace(
+        /`\/\$\{\s*window\.__dynamic_base__\s*\}\//g,
+        "`${ window.__dynamic_base__}/",
+      )
+      .replace(
+        /"\/\$\{\s*window\.__dynamic_base__\s*\}\//g,
+        '"${ window.__dynamic_base__}/',
+      )
+
+  return {
+    name: "fix-dynamic-base-runtime-paths",
+    enforce: "post",
+    apply: "build",
+    generateBundle(_, bundle) {
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type === "chunk") {
+          chunk.code = rewrite(chunk.code)
+        }
+
+        if (
+          chunk.type === "asset" &&
+          typeof chunk.source === "string" &&
+          chunk.fileName.endsWith(".js")
+        ) {
+          chunk.source = rewrite(chunk.source)
+        }
+      }
+    },
+  }
+}
+
 export default defineConfig({
   resolve: {
     alias: {
@@ -89,6 +123,7 @@ export default defineConfig({
         })
       : null,
     fixLegacyPolyfillDataSrc(),
+    fixDynamicBaseRuntimePaths(),
   ],
   base: process.env.NODE_ENV === "production" ? "/__dynamic_base__/" : "/",
   // base: "/",

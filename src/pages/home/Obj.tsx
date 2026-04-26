@@ -35,6 +35,18 @@ export { objBoxRef }
 export const Obj = () => {
   const t = useT()
   const cardBg = useColorModeValue("white", "$neutral3")
+  const shareCardBg = useColorModeValue(
+    "rgba(255, 255, 255, 0.3)",
+    "rgba(17, 20, 28, 0.4)",
+  )
+  const shareBorder = useColorModeValue(
+    "1px solid rgba(255, 255, 255, 0.38)",
+    "1px solid rgba(255, 255, 255, 0.08)",
+  )
+  const shareShadow = useColorModeValue(
+    "0 14px 36px rgba(124, 128, 148, 0.18)",
+    "0 16px 40px rgba(0, 0, 0, 0.26)",
+  )
   const { pathname, searchParams, isShare, to } = useRouter()
   const { handlePathChange, refresh } = usePath()
   const pagination = getPagination()
@@ -79,12 +91,21 @@ export const Obj = () => {
   return (
     <VStack
       ref={(el: HTMLDivElement) => setObjBoxRef(el)}
+      classList={{ "share-glass": isShare(), "share-obj-box": isShare() }}
       class="obj-box"
       w="$full"
       rounded="$xl"
-      bgColor={cardBg()}
+      bgColor={isShare() ? shareCardBg() : cardBg()}
+      border={isShare() ? shareBorder() : undefined}
       p="$2"
-      shadow="$lg"
+      shadow={isShare() ? undefined : "$lg"}
+      style={{
+        "box-shadow": isShare() ? shareShadow() : undefined,
+        "-webkit-backdrop-filter": isShare()
+          ? "blur(18px) saturate(140%)"
+          : undefined,
+        "backdrop-filter": isShare() ? "blur(18px) saturate(140%)" : undefined,
+      }}
       spacing="$2"
     >
       <Suspense fallback={<FullLoading />}>

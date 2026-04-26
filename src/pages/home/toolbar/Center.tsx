@@ -23,6 +23,7 @@ export const Center = () => {
       haveSelected(),
   )
   const { isShare } = useRouter()
+  const toolbarBg = useColorModeValue("white", "#000000d0")
   return (
     <Presence exitBeforeEnter>
       <Show when={show()}>
@@ -45,12 +46,14 @@ export const Center = () => {
           >
             <HStack
               p="$2"
-              bgColor={useColorModeValue("white", "#000000d0")()}
+              bgColor={isShare() ? "transparent" : toolbarBg()}
               spacing="$1"
-              shadow="0px 10px 30px -5px rgba(0, 0, 0, 0.3)"
+              shadow={
+                isShare() ? undefined : "0px 10px 30px -5px rgba(0, 0, 0, 0.3)"
+              }
               rounded="$lg"
               css={{
-                backdropFilter: "blur(8px)",
+                backdropFilter: isShare() ? "none" : "blur(8px)",
               }}
             >
               <Show when={!isShare() && objStore.write}>

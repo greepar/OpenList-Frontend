@@ -13,6 +13,7 @@ import { usePath, useRouter } from "~/hooks"
 import { Motion } from "solid-motionone"
 import { isTocVisible, setTocDisabled } from "~/components"
 import { BiSolidBookContent } from "solid-icons/bi"
+import { useColorModeValue } from "@hope-ui/solid"
 
 export const Right = () => {
   const { isOpen, onToggle } = createDisclosure({
@@ -24,6 +25,7 @@ export const Right = () => {
   const isFolder = createMemo(() => objStore.state === State.Folder)
   const { refresh } = usePath()
   const { isShare } = useRouter()
+  const toolbarBg = useColorModeValue("$neutral1", "$neutral1")
   return (
     <Box
       class="left-toolbar-box"
@@ -50,13 +52,19 @@ export const Right = () => {
           spacing="$1"
           // shadow="0px 10px 30px -5px rgba(0, 0, 0, 0.3)"
           // bgColor={useColorModeValue("white", "$neutral4")()}
-          bgColor="$neutral1"
+          bgColor={isShare() ? "transparent" : toolbarBg()}
           as={Motion.div}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.6 }}
           // @ts-ignore
           transition={{ duration: 0.2 }}
+          style={{
+            "box-shadow": isShare() ? "none" : undefined,
+            border: isShare() ? "none" : undefined,
+            "backdrop-filter": isShare() ? "none" : undefined,
+            "-webkit-backdrop-filter": isShare() ? "none" : undefined,
+          }}
         >
           <VStack spacing="$1" class="left-toolbar-in">
             <Show

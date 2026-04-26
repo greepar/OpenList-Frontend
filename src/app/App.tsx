@@ -42,6 +42,14 @@ const App: Component = () => {
     bus.emit("pathname", pathname())
   })
 
+  createEffect(() => {
+    document.body.classList.toggle("share-page", pathname().startsWith("/@s"))
+  })
+
+  onCleanup(() => {
+    document.body.classList.remove("share-page")
+  })
+
   const [err, setErr] = createSignal<string[]>([])
   const [loading, data] = useLoading(() =>
     Promise.all([
